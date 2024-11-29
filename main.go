@@ -13,7 +13,6 @@ import (
 func main() {
 	username := "mailtest@mooijman.info"
 	password := "JdhvVTn7tq"
-	//server := "mail.mooijman.info"
 	server := "mail218.hostingdiscounter.nl"
 	port := 993
 
@@ -56,6 +55,7 @@ func connectToServer(username, password, server string, port int) (*client.Clien
 func fetchEmails(imapClient *client.Client) error {
 	// Select the mailbox you want to read
 	mailbox, err := imapClient.Select("INBOX", false)
+	//mailbox, err := imapClient.Select("Drafts", false)
 	if err != nil {
 		return err
 	}
@@ -81,14 +81,25 @@ func fetchEmails(imapClient *client.Client) error {
 		fmt.Println("Subject:", msg.Envelope.Subject)
 		fmt.Println("from:", msg.Envelope.From)
 		fmt.Println("ID:", msg.Envelope.MessageId)
-		//fmt.Println("flags:", msg.Flags)
+		fmt.Println("flags:", msg.Flags)
+
+		fmt.Printf("-> variable - flags = %v is of type %T \n", msg.Flags, msg.Flags)
 		fmt.Println("-------------------")
 		for flag := range msg.Flags {
+			fmt.Println(" flag :", flag)
 			flagString := imap.CanonicalFlag(msg.Flags[flag])
 			fmt.Println(" flag :", flagString)
 		}
 		fmt.Println("-------------------")
 	}
+
+	//if err := imapClient.Create("Opruimen.2"); err != nil {
+	//	fmt.Printf("Failed create box %d: %v\n", seqSet, err)
+	//}
+	//
+	//if err := imapClient.Move(seqSet, "Opruimen2"); err != nil {
+	//	fmt.Printf("Failed to move message %d: %v\n", seqSet, err)
+	//}
 
 	return nil
 }
